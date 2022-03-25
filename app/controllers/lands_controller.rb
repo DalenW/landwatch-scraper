@@ -3,7 +3,7 @@ class LandsController < ApplicationController
 
   # GET /lands or /lands.json
   def index
-    @lands = Land.all
+    @lands = Land.all.order(price_per_acre: :asc)
   end
 
   def scrape
@@ -17,8 +17,7 @@ class LandsController < ApplicationController
   end
 
   # GET /lands/1 or /lands/1.json
-  def show
-  end
+  def show; end
 
   # GET /lands/new
   def new
@@ -26,8 +25,7 @@ class LandsController < ApplicationController
   end
 
   # GET /lands/1/edit
-  def edit
-  end
+  def edit; end
 
   # POST /lands or /lands.json
   def create
@@ -65,6 +63,37 @@ class LandsController < ApplicationController
       format.html { redirect_to lands_url, notice: 'Land was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def datatable
+    requested_length = params[:length].to_i
+    requested_start  = params[:start].to_i
+
+    sort_col = params['order']['0']['column'] # eg 0 for column 0
+    sort_dir = params['order']['0']['dir'] # 'desc' or 'asc'
+    sort_name = params['columns'][sort_col]['name'] # the column name set in the data table initialization. MUST equal the DB column name
+    search_value = params['search']['value']
+
+    puts sort_name
+
+    return unless %w[id site price acreage price_per_acre city state county landwatch_id].include? sort_name
+
+    filtered_count = Land.all.size
+    records = Land.all
+                  .order(sort_name => sort_dir)
+                  .limit(requested_length)
+                  .offset(requested_start)
+
+    ActiveRecord::Base.include_root_in_json = false
+
+    payload = {
+      draw: params[:draw],
+      recordsTotal: Land.all.size,
+      recordsFiltered: filtered_count,
+      data: records
+    }
+
+    render json: payload, status: :ok
   end
 
   private

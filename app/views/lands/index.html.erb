@@ -1,10 +1,15 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
 <p style="color: green"><%= notice %></p>
 
 <%= button_to 'Scrape', scrape_lands_path %>
 
 <h1>Lands</h1>
 
-<table>
+<table id="lands-table">
+  <thead>
   <tr>
     <th>ID</th>
     <th>Site</th>
@@ -17,23 +22,105 @@
     <th>Landwatch ID</th>
     <th>URL</th>
   </tr>
-  <tbody>
-    <% @lands.each do |land| %>
-      <tr>
-        <td><%= link_to land.id, land %></td>
-        <td><%= land.site %></td>
-        <td><%= land.price %></td>
-        <td><%= land.acreage %></td>
-        <td><%= land.price_per_acre %></td>
-        <td><%= land.city %></td>
-        <td><%= land.state %></td>
-        <td><%= land.county %></td>
-        <td><%= land.landwatch_id %></td>
-        <td>
-          <a href="https://www.landwatch.com/<%= land.site_path %>">Link</a>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
+  </thead>
+
+  <tbody></tbody>
+
+  <tfoot>
+  <tr>
+    <th>ID</th>
+    <th>Site</th>
+    <th>Price</th>
+    <th>Acreage</th>
+    <th>Price Per Acre</th>
+    <th>City</th>
+    <th>State</th>
+    <th>County</th>
+    <th>Landwatch ID</th>
+    <th>URL</th>
+  </tr>
+  </tfoot>
 </table>
+
+<script>
+    $(function () {
+        const exportColumns = [0, 1, 2, 3, 4]
+
+        const landsTable = $('#lands-table').DataTable({
+            ajax: {
+                url: '<%= lands_datatable_path %>',
+                type: 'GET'
+            },
+
+            processing: true,
+            serverSide: true,
+            paging: true,
+            pagingType: 'full_numbers',
+            searching: false,
+            lengthChange: true,
+            responsive: true,
+            order: [[ 0, "desc" ]],
+            columns: [
+                { data: 'id' },
+                { data: 'site' },
+                { data: 'price' },
+                { data: 'acreage' },
+                { data: 'price_per_acre' },
+                { data: 'city' },
+                { data: 'state' },
+                { data: 'county' },
+                { data: 'landwatch_id' },
+                {
+                    data: function (row, _type, _set) {
+                        return `<a href=https://www.landwatch.com//${row.site_path}" class="btn btn-outline-primary my-0 me-0" data-internal>
+                                  <i data-feather="chevrons-right"></i>
+                                </a>`;
+                    }
+                }
+            ],
+            columnDefs: [
+                { name: "id", targets: 0 },
+                { name: "site", targets: 1 },
+                { name: "price", targets: 2 },
+                { name: "acreage", targets: 3 },
+                { name: "price_per_acre", targets: 4 },
+                { name: "city", targets: 5 },
+                { name: "state", targets: 6 },
+                { name: "county", targets: 7 },
+                { name: "landwatch_id", targets: 8 },
+                { name: "url", targets: 9, orderable: false },
+
+                { targets: '_all', searchable: true, orderable: true}
+            ],
+            dom: '<"card-header border-bottom p-1"<"head-label"><"dt-action-buttons text-right"B>><"d-flex justify-content-between align-items-center mx-0 row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"d-flex justify-content-between mx-0 row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            buttons: [
+                {
+                    extend: 'csv',
+                    exportOptions: {
+                        columns: exportColumns
+                    }
+                },
+                {
+                    extend: 'copy',
+                    exportOptions: {
+                        columns: exportColumns
+                    }
+                },
+                {
+                    extend: 'pdf',
+                    exportOptions: {
+                        columns: exportColumns
+                    },
+                    orientation: 'landscape'
+                },
+                {
+                    extend: 'print',
+                    exportOptions: {
+                        columns: exportColumns
+                    }
+                }
+            ]
+        });
+    });
+</script>
 

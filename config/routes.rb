@@ -6,4 +6,5 @@ Rails.application.routes.draw do
   resources :lands, except: %i[new create edit update destroy] do
     match :scrape, via: %i[post put patch], on: :collection
   end
+  get 'lands_datatable' => 'lands#datatable'
 end

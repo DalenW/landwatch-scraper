@@ -7,7 +7,7 @@ class LandSpider < Kimurai::Base
   @name = 'land_spider'
   @engine = :selenium_firefox
 
-  PAGE_LIMIT = 2
+  PAGE_LIMIT = 50
 
   def self.process(url)
     @start_urls = [url]
@@ -80,6 +80,9 @@ class LandSpider < Kimurai::Base
     # puts "title: #{listing.at('div a div span:contains("acres")').map.last}"
 
     listing_title = ''
+    listing_title_element = listing.at('div a div span:contains("acres")')
+    return if listing_title_element.nil? # if there's no acres, then we skip this listing
+
     listing.at('div a div span:contains("acres")').map do |title|
       listing_title = title.last
     end
