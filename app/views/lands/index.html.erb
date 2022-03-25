@@ -1,0 +1,15 @@
+<p style="color: green"><%= notice %></p>
+
+<%= button_to 'Scrape', scrape_lands_path %>
+
+<h1>Lands</h1>
+
+<div id="lands">
+  <% @lands.each do |land| %>
+    <%= render land %>
+    <p>
+      <%= link_to "Show this land", land %>
+    </p>
+  <% end %>
+</div>
+

@@ -1,6 +1,9 @@
-Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+# frozen_string_literal: true
 
-  # Defines the root path route ("/")
-  # root "articles#index"
+Rails.application.routes.draw do
+  root 'lands#index'
+
+  resources :lands, except: %i[new create edit update destroy] do
+    match :scrape, via: %i[post put patch], on: :collection
+  end
 end
