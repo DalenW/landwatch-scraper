@@ -1,6 +1,12 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/cr-1.5.5/fh-3.2.2/r-2.2.9/rg-1.1.4/sl-1.3.4/datatables.min.css"/>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.11.5/b-2.2.2/b-colvis-2.2.2/b-html5-2.2.2/b-print-2.2.2/cr-1.5.5/fh-3.2.2/r-2.2.9/rg-1.1.4/sl-1.3.4/datatables.min.js"></script>
+
+
 
 <p style="color: green"><%= notice %></p>
 
@@ -44,7 +50,7 @@
 
 <script>
     $(function () {
-        const exportColumns = [0, 1, 2, 3, 4]
+        const exportColumns = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
         const landsTable = $('#lands-table').DataTable({
             ajax: {
@@ -63,17 +69,27 @@
             columns: [
                 { data: 'id' },
                 { data: 'site' },
-                { data: 'price' },
+                {
+                    data: function (row, _type, _set) {
+                        const pricePerAcre = parseFloat(row.price);
+                        return `$${pricePerAcre.toFixed(2)}`;
+                    }
+                },
                 { data: 'acreage' },
-                { data: 'price_per_acre' },
+                {
+                    data: function (row, _type, _set) {
+                        const pricePerAcre = parseFloat(row.price_per_acre);
+                        return pricePerAcre.toFixed(2);
+                    }
+                },
                 { data: 'city' },
                 { data: 'state' },
                 { data: 'county' },
                 { data: 'landwatch_id' },
                 {
                     data: function (row, _type, _set) {
-                        return `<a href=https://www.landwatch.com//${row.site_path}" class="btn btn-outline-primary my-0 me-0" data-internal>
-                                  <i data-feather="chevrons-right"></i>
+                        return `<a href=https://www.landwatch.com${row.site_path}" target="_blank">
+                                  Link
                                 </a>`;
                     }
                 }
