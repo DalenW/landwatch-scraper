@@ -7,7 +7,7 @@ class LandSpider < Kimurai::Base
   @name = 'land_spider'
   @engine = :selenium_firefox
 
-  PAGE_LIMIT = 50
+  PAGE_LIMIT = 999
 
   def self.process(url)
     @start_urls = [url]

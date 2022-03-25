@@ -74,8 +74,6 @@ class LandsController < ApplicationController
     sort_name = params['columns'][sort_col]['name'] # the column name set in the data table initialization. MUST equal the DB column name
     search_value = params['search']['value']
 
-    puts sort_name
-
     return unless %w[id site price acreage price_per_acre city state county landwatch_id].include? sort_name
 
     filtered_count = Land.all.size
