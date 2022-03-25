@@ -4,12 +4,36 @@
 
 <h1>Lands</h1>
 
-<div id="lands">
-  <% @lands.each do |land| %>
-    <%= render land %>
-    <p>
-      <%= link_to "Show this land", land %>
-    </p>
-  <% end %>
-</div>
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Site</th>
+    <th>Price</th>
+    <th>Acreage</th>
+    <th>Price Per Acre</th>
+    <th>City</th>
+    <th>State</th>
+    <th>County</th>
+    <th>Landwatch ID</th>
+    <th>URL</th>
+  </tr>
+  <tbody>
+    <% @lands.each do |land| %>
+      <tr>
+        <td><%= link_to land.id, land %></td>
+        <td><%= land.site %></td>
+        <td><%= land.price %></td>
+        <td><%= land.acreage %></td>
+        <td><%= land.price_per_acre %></td>
+        <td><%= land.city %></td>
+        <td><%= land.state %></td>
+        <td><%= land.county %></td>
+        <td><%= land.landwatch_id %></td>
+        <td>
+          <a href="https://www.landwatch.com/<%= land.site_path %>">Link</a>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
