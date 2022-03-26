@@ -1,24 +1,5 @@
-# README
+# LandWatch Scraper
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This website scrapes LandWatch URLs for data. This was mostly done to get the price-per-acre data. 
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+It uses PostgresQL and Ruby 2.7.5. If you have both of those installed feel free to use this and run it yourself. The table is rendered with DataTables. You can set a page scrape limit in the LandSpider class which is located in app/models.
