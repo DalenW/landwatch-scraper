@@ -17,10 +17,12 @@ class LandSpider < Kimurai::Base
   def parse(response, url:, data: {})
     puts 'here'
 
+    # grab and process all of the listings on the page
     response.xpath('//div[@data-qa-listing]').each do |listing|
       parse_listing listing
     end
 
+    # calculate the url for the next page
     next_url = url
     if next_url.include? '/page-'
       split_url = next_url.split('/page-')
@@ -38,33 +40,32 @@ class LandSpider < Kimurai::Base
 
     return if next_url.nil?
 
-    # puts url
     puts next_url
 
     path = next_url.split('.com')[1]
-    puts path
+    # puts path
 
 
+    # see if the next page exists
     all_links = response.xpath("//a[@href='#{path}']")
 
-    unless all_links.blank?
-      request_to :parse, url: next_url
-    end
+    # puts "All Links: #{all_links}"
 
-    puts "All Links: #{all_links}"
-
-
+    # if it does, crawl the next page
+    request_to :parse, url: next_url unless all_links.blank?
   end
 
   def parse_listing(listing)
     new_land = Land.new
 
+    # since we know what site it belongs too...
     new_land.site = 'landwatch.com'
-    new_land.site_path
 
+    # grab the link to the listing and print it out
     new_land.site_path = listing.css('div a').map.first['href']
     puts new_land.site_path
 
+    # grab the listing ID from the URL
     new_land.landwatch_id = new_land.site_path.split('/').last
     puts new_land.landwatch_id
 

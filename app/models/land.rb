@@ -1,3 +1,4 @@
+# holds data for land parcels
 class Land < ApplicationRecord
 
   before_create :calculate_price_per_acre

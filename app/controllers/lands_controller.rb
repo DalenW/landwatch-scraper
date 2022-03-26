@@ -7,8 +7,14 @@ class LandsController < ApplicationController
   end
 
   def scrape
-    url = 'https://www.landwatch.com/utah-land-for-sale/'
+    url = params[:url]
+    # if the url does not end with a /, add it
+    url += '/' unless url.end_with?('/')
+    # if the url does not start with http, add it
+    url = "https://#{url}" unless url.start_with?('http')
+
     response = LandSpider.process(url)
+
     if response[:status] == :completed && response[:error].nil?
       flash.now[:notice] = 'Successfully scraped url'
     else
@@ -79,7 +85,7 @@ class LandsController < ApplicationController
     filtered_count = Land.all.size
     records = Land.all
                   .order(sort_name => sort_dir)
-                  .limit(requested_length)
+                  .limit(requested_length == -1 ? nil : requested_length)
                   .offset(requested_start)
 
     ActiveRecord::Base.include_root_in_json = false
